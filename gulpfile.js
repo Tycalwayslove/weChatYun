@@ -1,5 +1,6 @@
 const gulp = require("gulp");
 const rename = require("gulp-rename");
+const colors = require("ansi-colors");
 const uglify = require("gulp-uglify");
 // json
 const jsonminify = require("gulp-jsonminify");
@@ -19,6 +20,7 @@ const filter = require("gulp-filter");
 const runSequence = require("run-sequence");
 
 const del = require("del");
+const log = require("fancy-log");
 
 const src = "./client";
 const dist = "./dist";
@@ -62,9 +64,9 @@ gulp.task("wxs", () => {
 });
 // wxss的处理
 // 添加 async 解决 Did you forget to signal async completion?的报错
-gulp.task("wxss", async () => {
-  const combined = combiner.obj([
-    await gulp.src(`${src}/**/*.{wxss,scss}`),
+gulp.task("wxss", () => {
+  return (combined = combiner.obj([
+    gulp.src(`${src}/**/*.{wxss,scss}`),
     sass().on("error", sass.logError),
     postcss([pxtorpx(), base64()]),
     isProd
@@ -75,7 +77,7 @@ gulp.task("wxss", async () => {
       : through.obj(),
     rename(path => (path.extname = ".wxss")),
     gulp.dest(dist)
-  ]);
+  ]));
 
   combined.on("error", handleError);
 });
@@ -84,9 +86,9 @@ gulp.task("images", () => {
   return gulp.src(`${src}/images/**`).pipe(gulp.dest(`${dist}/images`));
 });
 // 接下来就是遇到的问题, 关于js 和云函数的构建
-gulp.task("js", async () => {
+gulp.task("js", () => {
   const f = filter(file => !/(mock)/.test(file.path));
-  await gulp
+  return gulp
     .src(`${src}/**/*.js`)
     .pipe(isProd ? f : through.obj())
     .pipe(
@@ -117,12 +119,40 @@ gulp.task("js", async () => {
 // 最终运行的gulp
 // gulp.task("default", ["wxml"]);
 gulp.task("watch", () => {
-  ["wxml", "wxss", "js", "json", "wxs"].forEach(v => {
-    gulp.watch(`${src}/**/*.${v}`, [v]);
-  });
-  gulp.watch(`${src}/images/**`, ["images"]);
-  gulp.watch(`${src}/**/*.scss`, ["wxss"]);
+  gulp.watch(`${src}/**/*.wxml`, gulp.series("wxml"));
+  gulp.watch(`${src}/**/*.wxss`, gulp.series("wxss"));
+  gulp.watch(`${src}/**/*.js`, gulp.series("js"));
+  gulp.watch(`${src}/**/*.json`, gulp.series("json"));
+  gulp.watch(`${src}/**/*.wxs`, gulp.series("wxs"));
+  gulp.watch(`${src}/**/*.scss`, gulp.series("wxss"));
+  gulp.watch(`${src}/images/**`, gulp.series("images"));
 });
+
+// cloud-functions 处理方法
+const cloudPath = "./server/cloud-functions";
+gulp.task("cloud", () => {
+  return gulp
+    .src(`${cloudPath}/**`)
+    .pipe(
+      isProd
+        ? jdists({
+            trigger: "prod"
+          })
+        : jdists({
+            trigger: "dev"
+          })
+    )
+    .pipe(gulp.dest(`${dist}/cloud-functions`));
+});
+gulp.task("watch:cloud", () => {
+  gulp.watch(`${cloudPath}/**`, gulp.series("cloud")); //Gulp4
+  // gulp.watch(`${cloudPath}/**`, ["cloud"]); //Gulp3
+});
+
+// gulp.task("cloud:dev", () => {
+//   runSequence("cloud", "watch:cloud");
+// });
+gulp.task("cloud:dev", gulp.series("cloud", "watch:cloud"));
 gulp.task("clean", () => {
   return del(["./dist/**"]);
 });
@@ -142,7 +172,9 @@ gulp.task(
   "dev",
   gulp.series(
     "clean",
-    gulp.parallel("json", "images", "wxml", "wxss", "js", "wxs"),
+    gulp.parallel("json", "images", "wxml", "wxss", "js", "wxs", "cloud"),
+    "watch",
+
     // 解决上面报错
     done => {
       done();
@@ -155,7 +187,7 @@ gulp.task(
   "build",
   gulp.series(
     "clean",
-    gulp.parallel("json", "images", "wxml", "wxss", "js", "wxs"),
+    gulp.parallel("json", "images", "wxml", "wxss", "js", "wxs", "cloud"),
     // 解决上面报错
     done => {
       done();
