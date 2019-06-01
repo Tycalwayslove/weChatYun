@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "gulp dev",
-    "build": "gulp build",
+    "build": "cross-env NODE_ENV=production gulp build",
     "cloud": "gulp cloud:dev",
     "server": "nodemon ./server/index.js"
   },
@@ -22,6 +22,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.6",
     "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
     "del": "^4.1.1",
     "express": "^4.17.1",
     "gulp": "^4.0.2",

@@ -1,0 +1,9 @@
+// weather/index.scss
+// 定义 container 间隔
+$grid-margin: 20rpx;
+.container {
+  margin-bottom: $grid-margin;
+  max-width: 750rpx;
+  box-sizing: border-box;
+  color: #fff;
+}

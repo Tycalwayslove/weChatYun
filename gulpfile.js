@@ -83,38 +83,42 @@ gulp.task("wxss", () => {
 });
 // images 的处理
 gulp.task("images", () => {
-  return gulp.src(`${src}/images/**`).pipe(gulp.dest(`${dist}/images`));
+  return gulp
+    .src(`${src}/miniproject/images/**`)
+    .pipe(gulp.dest(`${dist}/miniproject/images`));
 });
 // 接下来就是遇到的问题, 关于js 和云函数的构建
 gulp.task("js", () => {
   const f = filter(file => !/(mock)/.test(file.path));
-  return gulp
-    .src(`${src}/**/*.js`)
-    .pipe(isProd ? f : through.obj())
-    .pipe(
-      isProd
-        ? jdists({
-            trigger: "prod"
-          })
-        : jdists({
-            trigger: "dev"
-          })
-    )
-    .pipe(isProd ? through.obj() : sourcemaps.init())
-    .pipe(
-      babel({
-        presets: ["@babel/preset-env"]
-      })
-    )
-    .pipe(
-      isProd
-        ? uglify({
-            compress: true
-          })
-        : through.obj()
-    )
-    .pipe(isProd ? through.obj() : sourcemaps.write("./"))
-    .pipe(gulp.dest(dist));
+  return (
+    gulp
+      .src(`${src}/**/*.js`)
+      .pipe(isProd ? f : through.obj())
+      .pipe(
+        isProd
+          ? jdists({
+              trigger: "prod"
+            })
+          : jdists({
+              trigger: "dev"
+            })
+      )
+      // .pipe(isProd ? through.obj() : sourcemaps.init())
+      .pipe(
+        babel({
+          presets: ["@babel/preset-env"]
+        })
+      )
+      .pipe(
+        isProd
+          ? uglify({
+              compress: true
+            })
+          : through.obj()
+      )
+      .pipe(isProd ? through.obj() : sourcemaps.write("./"))
+      .pipe(gulp.dest(dist))
+  );
 });
 // 最终运行的gulp
 // gulp.task("default", ["wxml"]);
@@ -125,7 +129,7 @@ gulp.task("watch", () => {
   gulp.watch(`${src}/**/*.json`, gulp.series("json"));
   gulp.watch(`${src}/**/*.wxs`, gulp.series("wxs"));
   gulp.watch(`${src}/**/*.scss`, gulp.series("wxss"));
-  gulp.watch(`${src}/images/**`, gulp.series("images"));
+  gulp.watch(`${src}/**/images/**`, gulp.series("images"));
 });
 
 // cloud-functions 处理方法
