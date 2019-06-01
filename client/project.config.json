@@ -1,1 +1,12 @@
-{ "cloudfunctionRoot": "./cloud-functions", "miniprogramRoot":"./dist",appid": "wxd518e14f9fdceacc" }
+{
+  "miniprogramRoot": "miniproject/",
+  "cloudfunctionRoot": "cloud-functions/",
+  "appid": "wxd518e14f9fdceacc",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  }
+}
