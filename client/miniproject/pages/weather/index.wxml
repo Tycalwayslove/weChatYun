@@ -61,7 +61,7 @@
     <view class="container">
       <scroll-view scroll-x class="hourly">
         <view class="scrollX">
-          <view class="item" wx:for="{{hourlyData}}">
+          <view class="item" wx:for="{{hourlyData}}" wx:key='*this'>
             <text class="time">{{ item.time }}</text>
             <icon type="{{item.icon}}" class="icon"></icon>
             <text class="temp">{{item.temp}}°</text>
@@ -72,7 +72,7 @@
     <view class="container">
       <view class="week">
         <view class="week-weather">
-          <view class="item" wx:for="{{weeklyData}}">
+          <view class="item" wx:for="{{weeklyData}}" wx:key='*this'>
             <view class="day">{{ utils.formatWeeklyDate(index) }}</view>
             <view class="date">{{ utils.formatDate(item.time) }}</view>
             <view class="daytime">
@@ -97,7 +97,7 @@
     </view>
     <view class="container">
       <view class="life-style">
-        <view class="item" wx:for="{{lifeStyle}}" data-name="{{item.name}}" data-detail="{{item.detail}}" bindtap="indexDetail">
+        <view class="item" wx:for="{{lifeStyle}}" wx:key='index' data-name="{{item.name}}" data-detail="{{item.detail}}" bindtap="indexDetail">
           <view class="title">
             <icon type="{{item.icon}}"></icon>
             {{item.name}}

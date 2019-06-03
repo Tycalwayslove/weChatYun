@@ -2,13 +2,13 @@
 import Promise from "./bluebird";
 
 const QQ_MAP_KEY = "GYIBZ-5VKWW-NRORI-OKQ3S-PJ55Q-ETFGN";
-const cloud = require("wx-server-sdk");
+// const cloud = require("wx-server-sdk");
 
-cloud.init({
+wx.cloud.init({
   env: "demo-yun"
 });
 
-const db = cloud.database();
+const db = wx.cloud.database();
 console.log(db);
 
 export const getEmotionByOpenidAndDate = (openid, year, month) => {
@@ -106,7 +106,7 @@ export const geocoder = (lat, lon, success = () => {}, fail = () => {}) => {
  * @param {*} code
  */
 export const jscode2session = code => {
-  return cloud.callFunction({
+  return wx.cloud.callFunction({
     name: "jscode2session",
     data: {
       code
@@ -135,11 +135,12 @@ export const getMood = (province, city, county, success = () => {}) => {
  * @param {*} lon
  */
 export const getWeather = (lat, lon) => {
-  return cloud.callFunction({
+  return wx.cloud.callFunction({
     name: "he-weather",
     data: {
       lat,
-      lon
+      lon,
+      key: "49d26eb32dea4e98ad4ff5fd9cd2e5df"
     }
   });
 };
@@ -148,10 +149,11 @@ export const getWeather = (lat, lon) => {
  * @param {*} city
  */
 export const getAir = city => {
-  return cloud.callFunction({
+  return wx.cloud.callFunction({
     name: "he-air",
     data: {
-      city
+      city,
+      key: "49d26eb32dea4e98ad4ff5fd9cd2e5df"
     }
   });
 };

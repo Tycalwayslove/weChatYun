@@ -53,6 +53,8 @@ Page({
       mask: true
     });
     const fail = e => {
+      console.log(e);
+      console.log(typeof cb);
       wx.hideLoading();
       if (typeof cb === "function") {
         cb();
@@ -227,6 +229,7 @@ Page({
     // return
     // console.log(location, getCurrentPages())
     const pages = getCurrentPages(); //获取加载的页面
+    console.log(pages);
     const currentPage = pages[pages.length - 1]; //获取当前页面的对象
     const query = currentPage.options;
     if (query && query.address && query.lat && query.lon) {
@@ -256,14 +259,14 @@ Page({
     });
   },
   goDiary() {
-    try {
-      let url = `/pages/diary/index`;
-      wx.navigateTo({
-        url
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   let url = `/pages/diary/index`;
+    //   wx.navigateTo({
+    //     url
+    //   });
+    // } catch (e) {
+    //   console.log(e);
+    // }
   },
   onShareAppMessage() {
     if (!isUpdate) {

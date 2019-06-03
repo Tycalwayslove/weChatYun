@@ -1,10 +1,9 @@
 import Promise from "./bluebird";
 const QQ_MAP_KEY = "ZVXBZ-D6JKU-4IRVY-2OHZB-RCSVK-LQFU6";
 
-const cloud = require("wx-server-sdk");
-cloud.init({
-  env: "demo-yun"
-});
+// cloud.init({
+//   env: "demo-yun"
+// });
 /**
  *  逆经纬度查询
  * @param {*} lat
@@ -48,9 +47,11 @@ export const getWeather = (lat, lon) => {
         key: "49d26eb32dea4e98ad4ff5fd9cd2e5df"
       },
       success: res => {
+        console.log(res);
         resolve({ result: res.data });
       },
       fail: e => {
+        console.error(e);
         reject(e);
       }
     });

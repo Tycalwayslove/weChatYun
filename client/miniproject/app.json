@@ -1,22 +1,19 @@
 {
-  "pages": ["pages/diary/index", "pages/trip/index", "pages/weather/index"],
+  "pages": ["pages/weather/index", "pages/trip/index"],
   "cloud": true,
+
   "window": {
-    "backgroundColor": "#F6F6F6",
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "糖油的出行助手222",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "天气",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "light"
   },
   "tabBar": {
     "list": [
       {
         "pagePath": "pages/weather/index",
         "text": "天气情况"
-      },
-      {
-        "pagePath": "pages/diary/index",
-        "text": "打卡"
       },
       {
         "pagePath": "pages/trip/index",
